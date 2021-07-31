@@ -12,18 +12,24 @@ namespace BikeThefts.DataAccess
 {
     public class BikeIndexService : IBikeIndexService
     {
+        private readonly ICacheService _cacheService;
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<BikeIndexService> _logger;
-        public BikeIndexService(IHttpClientFactory clientFactory, ILogger<BikeIndexService> logger)
+
+
+        public BikeIndexService(IHttpClientFactory clientFactory, ILogger<BikeIndexService> logger, ICacheService cacheService)
         {
             _clientFactory = clientFactory;
             _logger = logger;
+            _cacheService = cacheService;
         }
 
         public async Task<StolenBikes> GetThefts(Filters filters)
         {
             try
             {
+                var cache = _cacheService.GetCache<StolenBikes>(filters);
+                if (cache != null) return cache;
 
                 var client = _clientFactory.CreateClient("bikeindex");
                 var queryParams = new Dictionary<string, string>()
@@ -39,6 +45,7 @@ namespace BikeThefts.DataAccess
                 {
                     StolenBikes stolenBikes = new() { Distance = filters.Distance, Location = filters.Location };
                     stolenBikes.Thefts = JsonConvert.DeserializeObject<StolenBikes>(content).Thefts;
+                    _cacheService.SetCache(filters, stolenBikes);
                     return stolenBikes;
 
                 }

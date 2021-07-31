@@ -44,6 +44,7 @@ namespace BikeThefts.Api
 
             services.AddScoped<IBikeIndexService, BikeIndexService>();
             services.AddScoped<IBikeTheftsDomain, BikeTheftsDomain>();
+            services.AddSingleton<ICacheService, CacheService>();
             services.AddLogging();
 
 
@@ -71,6 +72,7 @@ namespace BikeThefts.Api
                     ClientSecret = bikeSettings.Secret
                 });
             });
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
