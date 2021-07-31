@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BikeThefts.Api.DTO;
+using BikeThefts.Domain.Entities;
 
 namespace BikeThefts.Api.Mapper
 {
@@ -7,7 +8,9 @@ namespace BikeThefts.Api.Mapper
     {
         public OrganizationProfile()
         {
-            CreateMap<Filters, Domain.Entities.Filters>();
+            CreateMap<DTO.Filters, Domain.Entities.Filters>();
+            CreateMap<StolenBikes, BikeTheftsReturn>()
+                .ForMember(dest => dest.Thefts, opt => opt.MapFrom(x => x.Thefts));
         }
     }
 }

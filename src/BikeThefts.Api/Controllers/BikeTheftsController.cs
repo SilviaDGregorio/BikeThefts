@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BikeThefts.Api.DTO;
 using BikeThefts.Domain.Entities;
 using BikeThefts.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BikeThefts.Api.Controllers
@@ -39,9 +41,33 @@ namespace BikeThefts.Api.Controllers
         /// <response code="500">Something went wrong</response>   
 
         [HttpGet()]
-        public async Task<StolenBikesCount> Get([FromQuery] DTO.Filters filters)
+        public async Task<BikeTheftsReturn> Get([FromQuery] DTO.Filters filters)
         {
-            return await _bikeTheftsDomain.GetThefts(_mapper.Map<Domain.Entities.Filters>(filters));
+            return _mapper.Map<BikeTheftsReturn>(await _bikeTheftsDomain.GetThefts(_mapper.Map<Domain.Entities.Filters>(filters)));
+        }
+
+        /// <summary>
+        /// Get number of stolen bikes for our locations
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     Get /BikeThefts
+        ///     {
+        ///        "locationType": "Operative"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="locationType">Which locations we want to check,Operative or Expand </param>
+        /// <returns>Number of stolen bikes per location</returns>
+        /// <response code="200">Number of stolen bikes per location</response>
+        /// <response code="400">Filters are not correct</response>   
+        /// <response code="500">Something went wrong</response>   
+
+        [HttpGet("Locations")]
+        public async Task<List<BikeTheftsReturn>> Get(LocationType locationType)
+        {
+            return _mapper.Map<List<BikeTheftsReturn>>(await _bikeTheftsDomain.GetThefts(locationType));
         }
     }
 }

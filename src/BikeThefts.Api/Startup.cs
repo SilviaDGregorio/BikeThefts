@@ -2,6 +2,7 @@ using BikeThefts.Api.DTO;
 using BikeThefts.Api.Mapper;
 using BikeThefts.DataAccess;
 using BikeThefts.Domain;
+using BikeThefts.Domain.Entities;
 using BikeThefts.Domain.Interfaces;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
@@ -30,13 +32,21 @@ namespace BikeThefts.Api
         {
             BikeIndexSettings bikeSettings = new();
             Configuration.Bind("BikeIndex", bikeSettings);
+            services.Configure<Locations>(Configuration.GetSection("Locations"));
             services.AddAutoMapper(typeof(OrganizationProfile));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+            });
+
+            services.AddSwaggerGenNewtonsoftSupport();
 
             services.AddScoped<IBikeIndexService, BikeIndexService>();
             services.AddScoped<IBikeTheftsDomain, BikeTheftsDomain>();
-
             services.AddLogging();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BikeThefts.Api", Version = "v1" });

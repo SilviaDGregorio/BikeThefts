@@ -20,10 +20,11 @@ namespace BikeThefts.DataAccess
             _logger = logger;
         }
 
-        public async Task<StolenBikesCount> GetThefts(Filters filters)
+        public async Task<StolenBikes> GetThefts(Filters filters)
         {
             try
             {
+
                 var client = _clientFactory.CreateClient("bikeindex");
                 var queryParams = new Dictionary<string, string>()
                 {
@@ -36,7 +37,10 @@ namespace BikeThefts.DataAccess
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<StolenBikesCount>(content);
+                    StolenBikes stolenBikes = new() { Distance = filters.Distance, Location = filters.Location };
+                    stolenBikes.Thefts = JsonConvert.DeserializeObject<StolenBikes>(content).Thefts;
+                    return stolenBikes;
+
                 }
                 else
                 {
