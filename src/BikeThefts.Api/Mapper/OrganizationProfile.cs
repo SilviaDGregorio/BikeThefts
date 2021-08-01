@@ -9,8 +9,8 @@ namespace BikeThefts.Api.Mapper
         public OrganizationProfile()
         {
             CreateMap<DTO.Filters, Domain.Entities.Filters>();
-            CreateMap<StolenBikes, BikeTheftsReturn>()
-                .ForMember(dest => dest.Thefts, opt => opt.MapFrom(x => x.Thefts));
+            CreateMap<StolenBikes, BikeTheftsReturn>();
+            CreateMap<StolenBikes, BikeTheftsLocationsReturn>();
         }
     }
 }

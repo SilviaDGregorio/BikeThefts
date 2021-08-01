@@ -9,7 +9,7 @@ namespace BikeThefts.Api.DTO
         public override bool IsValid(object value)
         {
             // return true if value is a non-null number > 0, otherwise return false
-            return value != null && float.TryParse(value.ToString(), out float number) && number > 0;
+            return value != null && double.TryParse(value.ToString(), out double number) && number > 0;
         }
     }
 }

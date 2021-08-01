@@ -1,6 +1,8 @@
-﻿using BikeThefts.Domain.Entities;
-using BikeThefts.Domain.Interfaces;
+﻿using BikeThefts.DataAccess.Interfaces;
+using BikeThefts.DataAccess.Settings;
+using BikeThefts.Domain.Entities;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace BikeThefts.DataAccess
@@ -8,10 +10,13 @@ namespace BikeThefts.DataAccess
     public class CacheService : ICacheService
     {
         private readonly IMemoryCache _cache;
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-        public CacheService(IMemoryCache cache)
+        public CacheService(IMemoryCache cache, IOptions<CacheSettings> options)
         {
             _cache = cache;
+            _cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(options.Value.ExpirationMinutes));
         }
 
         public T GetCache<T>(Filters key)
@@ -22,17 +27,12 @@ namespace BikeThefts.DataAccess
 
         public void SetCache<T>(Filters key, T cacheEntry)
         {
-            // Set cache options.
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                // Keep in cache for this time, reset time if accessed.
-                .SetSlidingExpiration(TimeSpan.FromMinutes(30));
-
-            // Save data in cache.
-            _cache.Set(GetCacheKey(key), cacheEntry, cacheEntryOptions);
+            _cache.Set(GetCacheKey(key), cacheEntry, _cacheEntryOptions);
         }
+
         private string GetCacheKey(Filters key)
         {
-            return key.Location + key.Distance;
+            return key.Location + "." + key.Distance;
         }
     }
 }

@@ -2,9 +2,10 @@
 
 namespace BikeThefts.Domain.Entities
 {
-    public class StolenBikes : Filters
+    public class StolenBikes
     {
-        [JsonProperty("Proximity")]
         public int Thefts { get; set; }
+        public string Location { get; set; }
+        public double Distance { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using BikeThefts.Domain.Entities;
+﻿using BikeThefts.DataAccess.DTO;
+using BikeThefts.DataAccess.Interfaces;
+using BikeThefts.Domain.Entities;
 using BikeThefts.Domain.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
@@ -24,12 +26,12 @@ namespace BikeThefts.DataAccess
             _cacheService = cacheService;
         }
 
-        public async Task<StolenBikes> GetThefts(Filters filters)
+        public async Task<int> GetThefts(Filters filters)
         {
             try
             {
-                var cache = _cacheService.GetCache<StolenBikes>(filters);
-                if (cache != null) return cache;
+                var cache = _cacheService.GetCache<int?>(filters);
+                if (cache != null) return cache.Value;
 
                 var client = _clientFactory.CreateClient("bikeindex");
                 var queryParams = new Dictionary<string, string>()
@@ -39,20 +41,16 @@ namespace BikeThefts.DataAccess
                 };
                 string url = QueryHelpers.AddQueryString("search/count", queryParams);
                 var response = await client.GetAsync(url);
-                var content = await response.Content.ReadAsStringAsync();
+                var content = JsonConvert.DeserializeObject<BikeTheftsResponse>(await response.Content.ReadAsStringAsync());
 
                 if (response.IsSuccessStatusCode)
                 {
-                    StolenBikes stolenBikes = new() { Distance = filters.Distance, Location = filters.Location };
-                    stolenBikes.Thefts = JsonConvert.DeserializeObject<StolenBikes>(content).Thefts;
-                    _cacheService.SetCache(filters, stolenBikes);
-                    return stolenBikes;
-
+                    _cacheService.SetCache(filters, content.Proximity);
+                    return content.Proximity;
                 }
                 else
                 {
-                    var error = JsonConvert.DeserializeObject<ResponseError>(content);
-                    throw new HttpRequestException(error.Error, null, response.StatusCode);
+                    throw new HttpRequestException(content.Error, null, response.StatusCode);
                 }
             }
             catch (Exception ex)

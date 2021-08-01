@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net.Http;
@@ -29,6 +30,7 @@ namespace BikeThefts.Api.Controllers
             {
 
                 HttpRequestException => CreateProblem(context, (int)((HttpRequestException)context.Error).StatusCode),
+                ArgumentException => CreateProblem(context, StatusCodes.Status400BadRequest),
                 _ => CreateProblem(context, null)
             };
 

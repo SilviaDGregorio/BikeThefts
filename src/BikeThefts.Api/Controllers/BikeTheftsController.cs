@@ -27,14 +27,10 @@ namespace BikeThefts.Api.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     Get /BikeThefts
-        ///     {
-        ///        "location": "Amsterdam"// Examples: “210 NW 11th Ave, Portland, OR”, “60647”, “Chicago, IL”, or “45.521728,-122.67326”,
-        ///        "distance": 1 // Distance in km
-        ///     }
-        ///
+        ///     Get /BikeThefts/Amsterdam/10 
+        ///     Location -> Can be a City,Street or lat/lon Example: “210 NW 11th Ave, Portland, OR”, “60647”, “Chicago, IL”, or “45.521728,-122.67326” 
+        ///     Distance -> Distance from the location in Miles
         /// </remarks>
-        /// <param name="filters">Location and distance to search the thefts </param>
         /// <returns>Number of stolen bikes</returns>
         /// <response code="200">Number of stolen bikes</response>
         /// <response code="400">Filters are not correct</response>   
@@ -43,7 +39,8 @@ namespace BikeThefts.Api.Controllers
         [HttpGet()]
         public async Task<BikeTheftsReturn> Get([FromQuery] DTO.Filters filters)
         {
-            return _mapper.Map<BikeTheftsReturn>(await _bikeTheftsDomain.GetThefts(_mapper.Map<Domain.Entities.Filters>(filters)));
+            var thefts = await _bikeTheftsDomain.GetThefts(_mapper.Map<Domain.Entities.Filters>(filters));
+            return _mapper.Map<BikeTheftsReturn>(thefts);
         }
 
         /// <summary>
@@ -52,11 +49,8 @@ namespace BikeThefts.Api.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     Get /BikeThefts
-        ///     {
-        ///        "locationType": "Operative"
-        ///     }
-        ///
+        ///     Get /BikeThefts/Operative
+        ///     Can be Operative or Expand locations
         /// </remarks>
         /// <param name="locationType">Which locations we want to check,Operative or Expand </param>
         /// <returns>Number of stolen bikes per location</returns>
@@ -65,9 +59,10 @@ namespace BikeThefts.Api.Controllers
         /// <response code="500">Something went wrong</response>   
 
         [HttpGet("Locations")]
-        public async Task<List<BikeTheftsReturn>> Get(LocationType locationType)
+        public async Task<List<BikeTheftsLocationsReturn>> Get(LocationType locationType)
         {
-            return _mapper.Map<List<BikeTheftsReturn>>(await _bikeTheftsDomain.GetThefts(locationType));
+            var listOfThefts = await _bikeTheftsDomain.GetThefts(locationType);
+            return _mapper.Map<List<BikeTheftsLocationsReturn>>(listOfThefts);
         }
     }
 }

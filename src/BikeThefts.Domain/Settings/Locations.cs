@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BikeThefts.Domain.Entities;
+using System.Collections.Generic;
 
-namespace BikeThefts.Domain.Entities
+namespace BikeThefts.Domain.Settings
 {
     public class Locations
     {

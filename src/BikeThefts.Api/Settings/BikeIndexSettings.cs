@@ -1,4 +1,4 @@
-﻿namespace BikeThefts.Api.DTO
+﻿namespace BikeThefts.Api.Settings
 {
     public class BikeIndexSettings
     {

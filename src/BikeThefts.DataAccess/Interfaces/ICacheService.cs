@@ -1,6 +1,6 @@
 ﻿using BikeThefts.Domain.Entities;
 
-namespace BikeThefts.Domain.Interfaces
+namespace BikeThefts.DataAccess.Interfaces
 {
     public interface ICacheService
     {

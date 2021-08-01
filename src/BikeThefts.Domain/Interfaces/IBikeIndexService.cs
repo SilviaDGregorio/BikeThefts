@@ -5,6 +5,6 @@ namespace BikeThefts.Domain.Interfaces
 {
     public interface IBikeIndexService
     {
-        Task<StolenBikes> GetThefts(Filters filter);
+        Task<int> GetThefts(Filters filter);
     }
 }

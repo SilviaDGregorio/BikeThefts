@@ -1,6 +1,9 @@
 using BikeThefts.Api.DTO;
 using BikeThefts.Api.Mapper;
+using BikeThefts.Api.Settings;
 using BikeThefts.DataAccess;
+using BikeThefts.DataAccess.Interfaces;
+using BikeThefts.DataAccess.Settings;
 using BikeThefts.Domain;
 using BikeThefts.Domain.Entities;
 using BikeThefts.Domain.Interfaces;
@@ -32,7 +35,8 @@ namespace BikeThefts.Api
         {
             BikeIndexSettings bikeSettings = new();
             Configuration.Bind("BikeIndex", bikeSettings);
-            services.Configure<Locations>(Configuration.GetSection("Locations"));
+            services.Configure<CacheSettings>(Configuration.GetSection("Cache"));
+            services.Configure<Domain.Settings.Locations>(Configuration.GetSection("Locations"));
             services.AddAutoMapper(typeof(OrganizationProfile));
             services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -44,7 +48,7 @@ namespace BikeThefts.Api
 
             services.AddScoped<IBikeIndexService, BikeIndexService>();
             services.AddScoped<IBikeTheftsDomain, BikeTheftsDomain>();
-            services.AddSingleton<ICacheService, CacheService>();
+            services.AddScoped<ICacheService, CacheService>();
             services.AddLogging();
 
 
