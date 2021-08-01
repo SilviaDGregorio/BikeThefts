@@ -18,7 +18,6 @@ namespace BikeThefts.DataAccess
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<BikeIndexService> _logger;
 
-
         public BikeIndexService(IHttpClientFactory clientFactory, ILogger<BikeIndexService> logger, ICacheService cacheService)
         {
             _clientFactory = clientFactory;
@@ -34,12 +33,7 @@ namespace BikeThefts.DataAccess
                 if (cache != null) return cache.Value;
 
                 var client = _clientFactory.CreateClient("bikeindex");
-                var queryParams = new Dictionary<string, string>()
-                {
-                    {"location", filters.Location },
-                    {"distance", filters.Distance.ToString() }
-                };
-                string url = QueryHelpers.AddQueryString("search/count", queryParams);
+                string url = AddQueryParameters(filters);
                 var response = await client.GetAsync(url);
                 var content = JsonConvert.DeserializeObject<BikeTheftsResponse>(await response.Content.ReadAsStringAsync());
 
@@ -60,6 +54,16 @@ namespace BikeThefts.DataAccess
                 throw;
             }
 
+        }
+
+        private string AddQueryParameters(Filters filters)
+        {
+            var queryParams = new Dictionary<string, string>()
+                {
+                    {"location", filters.Location },
+                    {"distance", filters.Distance.ToString() }
+                };
+            return QueryHelpers.AddQueryString("search/count", queryParams);
         }
     }
 }

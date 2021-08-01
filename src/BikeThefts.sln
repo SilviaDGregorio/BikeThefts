@@ -5,14 +5,16 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeThefts.Api", "BikeThefts.Api\BikeThefts.Api.csproj", "{0907A4A6-0593-4DF3-916E-E5A26E5C3DE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeThefts.Domain", "BikeThefts.Domain\BikeThefts.Domain.csproj", "{77D6AA0B-2985-4D84-9A48-40D10079A1BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeThefts.Domain", "BikeThefts.Domain\BikeThefts.Domain.csproj", "{77D6AA0B-2985-4D84-9A48-40D10079A1BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeThefts.DataAccess", "BikeThefts.DataAccess\BikeThefts.DataAccess.csproj", "{D2C6FAB0-BC4B-482D-BA85-12D17D47E9AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BikeThefts.DataAccess", "BikeThefts.DataAccess\BikeThefts.DataAccess.csproj", "{D2C6FAB0-BC4B-482D-BA85-12D17D47E9AD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FF1F20B4-9B51-481E-94D7-074C017253C0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeThefts.Test", "..\test\BikeThefts.Test\BikeThefts.Test.csproj", "{8A8DA256-3698-4E1E-91EA-62167BDF2F59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{D2C6FAB0-BC4B-482D-BA85-12D17D47E9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2C6FAB0-BC4B-482D-BA85-12D17D47E9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2C6FAB0-BC4B-482D-BA85-12D17D47E9AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A8DA256-3698-4E1E-91EA-62167BDF2F59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A8DA256-3698-4E1E-91EA-62167BDF2F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A8DA256-3698-4E1E-91EA-62167BDF2F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A8DA256-3698-4E1E-91EA-62167BDF2F59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
