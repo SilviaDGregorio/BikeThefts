@@ -15,8 +15,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 
 namespace BikeThefts.Api
@@ -65,7 +68,9 @@ namespace BikeThefts.Api
             {
                 c.BaseAddress = new Uri(bikeSettings.BaseUrl);
 
-            }).AddClientAccessTokenHandler();
+            }).AddClientAccessTokenHandler()
+             .SetHandlerLifetime(TimeSpan.FromMinutes(5))  //Set lifetime to five minutes
+             .AddPolicyHandler(GetRetryPolicy());
 
             services.AddAccessTokenManagement(options =>
             {
@@ -99,6 +104,14 @@ namespace BikeThefts.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
     }
 }
